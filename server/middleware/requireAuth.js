@@ -13,7 +13,7 @@ export async function requireAuth(req, res, next) {
     return res.status(401).json({ message: 'Sesja wygasła. Zaloguj się ponownie.' });
   }
 
-  const user = await User.findById(claims.sub).select('name email');
+  const user = await User.findById(claims.sub).select('name email createdAt');
   if (!user) return res.status(401).json({ message: 'Sesja wygasła. Zaloguj się ponownie.' });
   req.user = user;
   return next();

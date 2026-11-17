@@ -2,7 +2,7 @@
 
 ## Aktualny zakres
 
-Responsywny ekran startowy z formularzami rejestracji i logowania, obsługą sesji oraz wylogowaniem. Po uwierzytelnieniu aplikacja pokazuje krótkie potwierdzenie sesji; dodatkowe moduły dziennika nie są jeszcze częścią projektu.
+Responsywny ekran startowy z osobnymi podstronami `/login`, `/register` i `/test`. Po poprawnym logowaniu lub rejestracji użytkownik trafia na stronę testową z danymi swojego konta oraz możliwością wylogowania. Dodatkowe moduły dziennika nie są jeszcze częścią projektu.
 
 ## Technologie
 
@@ -29,6 +29,10 @@ W trybie produkcyjnym `npm run build` przygotowuje frontend, a `npm start` uruch
 
 Udana rejestracja lub logowanie ustawia sesyjne ciasteczko `HttpOnly`. Żądania do endpointów są ograniczane do 10 prób na adres IP w ciągu 15 minut.
 
+## Ochrona podstrony testowej
+
+Trasa `/test` wymaga aktywnej sesji. Frontend sprawdza sesję i przekierowuje niezalogowanego użytkownika do `/login`; backend osobno weryfikuje ciasteczko i zwraca dane tylko przez chroniony endpoint `GET /api/auth/me`. Po wylogowaniu sesja jest usuwana, a użytkownik wraca do logowania.
+
 ## Zabezpieczenia
 
 - Hasło jest haszowane przez bcrypt przed zapisem; pole hasła w MongoDB zawiera wyłącznie hash.
@@ -41,8 +45,11 @@ Udana rejestracja lub logowanie ustawia sesyjne ciasteczko `HttpOnly`. Żądania
 
 ```text
 src/
-  components/       Formularze, pola i panel sesji React
+  components/       Wspólne komponenty formularzy i elementy strony
+  context/          Stan sesji użytkownika
+  layouts/          Wspólny układ podstron
   lib/              Klient API
+  pages/            Podstrony logowania, rejestracji i testowa
   App.jsx
   index.css         Tailwind oraz style ekranu startowego
 server/

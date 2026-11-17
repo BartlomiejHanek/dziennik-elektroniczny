@@ -30,7 +30,12 @@ function validateCredentials(body, { registration = false } = {}) {
 }
 
 function publicUser(user) {
-  return { id: user.id, name: user.name, email: user.email };
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    createdAt: user.createdAt,
+  };
 }
 
 function issueSession(user, res) {
