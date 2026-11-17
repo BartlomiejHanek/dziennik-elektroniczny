@@ -1,57 +1,65 @@
 # Dziennik elektroniczny
 
-## Opis projektu
+## Aktualny zakres
 
-Projekt zakłada stworzenie aplikacji webowej w formie dziennika elektronicznego. Aplikacja ma umożliwiać gromadzenie i przeglądanie informacji szkolnych w jednym miejscu.
+Responsywny ekran startowy z formularzami rejestracji i logowania, obsługą sesji oraz wylogowaniem. Po uwierzytelnieniu aplikacja pokazuje krótkie potwierdzenie sesji; dodatkowe moduły dziennika nie są jeszcze częścią projektu.
 
-Planowane funkcje obejmują przeglądanie ocen, frekwencji i ogłoszeń. Zakres dostępu do danych będzie zależał od roli użytkownika, na przykład ucznia, nauczyciela lub administratora. Szczegółowe funkcje zostaną określone i zrealizowane w trakcie pracy nad projektem.
+## Technologie
 
-## Planowany stos technologiczny
+- **Frontend:** React 19, Vite, Tailwind CSS 4
+- **Backend:** Node.js, Express 5
+- **Baza danych:** MongoDB Atlas przez Mongoose
+- **Haszowanie haseł:** bcryptjs
 
-- **Frontend:** React
-- **Backend:** Node.js i Express
-- **Baza danych:** MongoDB
-- **Style:** Tailwind CSS
+## Uruchomienie
 
-## Planowane role użytkowników
+1. Skopiuj `.env.example` do lokalnego pliku `.env` i uzupełnij dane MongoDB Atlas oraz własny `SESSION_SECRET` (minimum 32 znaki).
+2. Zainstaluj zależności poleceniem `npm install`.
+3. Uruchom aplikację poleceniem `npm run dev`.
+4. Otwórz adres Vite podany w terminalu. Vite przekazuje żądania `/api` do Expressa na porcie 4000.
 
-- **Uczeń** — przeglądanie własnych ocen, frekwencji i ogłoszeń.
-- **Nauczyciel** — zarządzanie wybranymi informacjami dotyczącymi uczniów.
-- **Administrator** — zarządzanie kontami i rolami użytkowników.
+W trybie produkcyjnym `npm run build` przygotowuje frontend, a `npm start` uruchamia Express, który serwuje zbudowaną aplikację i API.
 
-Role i dostępne dla nich funkcje są założeniami projektu i mogą ulec zmianie podczas realizacji.
+## Endpointy uwierzytelniania
 
-## Bezpieczeństwo
+- `POST /api/auth/register` — tworzy konto na podstawie imienia i nazwiska, e-maila oraz hasła.
+- `POST /api/auth/login` — weryfikuje e-mail i hasło.
+- `POST /api/auth/logout` — kończy sesję.
+- `GET /api/auth/me` — zwraca konto dla aktywnej sesji.
 
-Podczas tworzenia aplikacji planujemy uwzględnić:
+Udana rejestracja lub logowanie ustawia sesyjne ciasteczko `HttpOnly`. Żądania do endpointów są ograniczane do 10 prób na adres IP w ciągu 15 minut.
 
-- sprawdzanie uprawnień użytkownika po stronie serwera;
-- walidację danych przed ich zapisaniem;
-- bezpieczne przechowywanie haseł;
-- ochronę danych konfiguracyjnych, takich jak hasła i klucze dostępowe;
-- ograniczenie dostępu użytkowników do danych, których nie powinni przeglądać ani zmieniać.
+## Zabezpieczenia
 
-## Plan realizacji
+- Hasło jest haszowane przez bcrypt przed zapisem; pole hasła w MongoDB zawiera wyłącznie hash.
+- Backend waliduje adres e-mail, długość nazwy i hasła. Frontend pokazuje błędy formularza przed wysłaniem.
+- Token sesji trafia do ciasteczka `HttpOnly`, `SameSite=Strict`, ważnego przez 7 dni; w środowisku produkcyjnym ciasteczko wymaga HTTPS.
+- Pole `passwordHash` nie jest zwracane przez model użytkownika bez jawnego żądania.
+- `.env` jest ignorowany przez Git. Nie umieszczaj haseł ani kluczy w commitach.
 
-1. Przygotowanie struktury projektu i repozytorium.
-2. Zaprojektowanie bazy danych oraz interfejsu.
-3. Przygotowanie backendu i API.
-4. Stworzenie interfejsu użytkownika.
-5. Implementacja logowania i uprawnień.
-6. Dodanie funkcji związanych z ocenami, frekwencją i ogłoszeniami.
-7. Testowanie i uzupełnienie dokumentacji.
+## Struktura
+
+```text
+src/
+  components/       Formularze, pola i panel sesji React
+  lib/              Klient API
+  App.jsx
+  index.css         Tailwind oraz style ekranu startowego
+server/
+  config/           Połączenie z MongoDB Atlas
+  controllers/      Rejestracja, logowanie i sesje
+  middleware/       Sesja i ograniczanie prób
+  models/           Model użytkownika MongoDB
+  routes/           Endpointy API
+  app.js
+  index.js
+```
+
+## Planowane funkcje projektu
+
+Docelowy dziennik może obejmować role ucznia, nauczyciela i administratora, oceny, frekwencję oraz ogłoszenia. Te moduły nie są częścią obecnego zakresu.
 
 ## Autorzy
 
 - Bartłomiej Hanek
 - Karol Tracz
-
-## Aktualny zakres
-
-Obecny etap obejmuje responsywną stronę tytułową i formularz logowania. Interfejs został przygotowany w HTML, CSS i JavaScript.
-
-Formularz waliduje adres e-mail i wymagane hasło, pokazuje błędy przy polach oraz pozwala odsłonić hasło. Logowanie jest demonstracyjne: nie łączy się jeszcze z serwerem i nie uwierzytelnia kont.
-
-## Uruchomienie
-
-Otwórz plik `index.html` w przeglądarce. Strona nie wymaga instalowania zależności.
