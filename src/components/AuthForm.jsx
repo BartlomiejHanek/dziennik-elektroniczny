@@ -1,11 +1,12 @@
 import { useState } from 'react';
+import { Link } from 'react-router';
 import { authApi } from '../lib/api.js';
 import AuthField from './AuthField.jsx';
 
 const initialValues = { name: '', email: '', password: '', confirmation: '' };
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export default function AuthForm({ mode, onModeChange, onAuthenticated }) {
+export default function AuthForm({ mode, onAuthenticated }) {
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState('');
@@ -51,14 +52,6 @@ export default function AuthForm({ mode, onModeChange, onAuthenticated }) {
     }
   }
 
-  function switchMode(nextMode) {
-    setMessage('');
-    setErrors({});
-    setRevealPassword(false);
-    setRevealConfirmation(false);
-    onModeChange(nextMode);
-  }
-
   return (
     <div className="w-full max-w-[390px]">
       <div className="mb-7 flex items-center justify-between">
@@ -74,11 +67,6 @@ export default function AuthForm({ mode, onModeChange, onAuthenticated }) {
       <p className="mb-7 text-[13px] text-[#9295a5]">
         {isRegister ? 'Utwórz konto, aby korzystać z dziennika.' : 'Zaloguj się do swojego konta szkolnego.'}
       </p>
-
-      <div className="mb-6 grid grid-cols-2 rounded-xl bg-[#f5f5f9] p-1" role="group" aria-label="Wybierz formularz">
-        <button type="button" aria-pressed={!isRegister} onClick={() => switchMode('login')} className={`rounded-[9px] px-3 py-2.5 text-[11px] font-bold transition ${!isRegister ? 'bg-white text-ink shadow-sm' : 'text-[#8c8fa0] hover:text-ink'}`}>Logowanie</button>
-        <button type="button" aria-pressed={isRegister} onClick={() => switchMode('register')} className={`rounded-[9px] px-3 py-2.5 text-[11px] font-bold transition ${isRegister ? 'bg-white text-ink shadow-sm' : 'text-[#8c8fa0] hover:text-ink'}`}>Rejestracja</button>
-      </div>
 
       <form onSubmit={handleSubmit} noValidate className="space-y-[17px]">
         {isRegister && (
@@ -101,9 +89,9 @@ export default function AuthForm({ mode, onModeChange, onAuthenticated }) {
       <div className="my-6 flex items-center justify-center gap-[5px]" aria-hidden="true"><span className="size-1 rounded-full bg-[#dedfea]" /><span className="size-1 rounded-full bg-[#a99aef]" /><span className="size-1 rounded-full bg-[#dedfea]" /></div>
       <p className="text-center text-[11px] leading-[1.8] text-[#9295a5]">
         {isRegister ? 'Masz już konto?' : 'Nie masz jeszcze konta?'}{' '}
-        <button type="button" className="font-bold text-violet hover:text-[#5c40d4]" onClick={() => switchMode(isRegister ? 'login' : 'register')}>
+        <Link className="font-bold text-violet hover:text-[#5c40d4]" to={isRegister ? '/login' : '/register'}>
           {isRegister ? 'Zaloguj się' : 'Zarejestruj się'}
-        </button>
+        </Link>
       </p>
     </div>
   );
