@@ -45,3 +45,13 @@ Podczas tworzenia aplikacji planujemy uwzględnić:
 
 - Bartłomiej Hanek
 - Karol Tracz
+
+## Aktualny zakres
+
+Obecny etap obejmuje responsywną stronę tytułową i formularz logowania. Interfejs został przygotowany w HTML, CSS i JavaScript.
+
+Formularz waliduje adres e-mail i wymagane hasło, pokazuje błędy przy polach oraz pozwala odsłonić hasło. Logowanie jest demonstracyjne: nie łączy się jeszcze z serwerem i nie uwierzytelnia kont.
+
+## Uruchomienie
+
+Otwórz plik `index.html` w przeglądarce. Strona nie wymaga instalowania zależności.
